@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Library.API.Helpers;
-using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Library.API.Controllers
 {
@@ -23,7 +23,7 @@ namespace Library.API.Controllers
         {
             var authorsFromRepo = _libraryRepository.GetAuthors();
 
-            var authors = Mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo);
+            var authors = AutoMapper.Mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo);
 
             return Ok(authors);
         }
@@ -38,7 +38,7 @@ namespace Library.API.Controllers
                 return NotFound();
             }
 
-            var author = Mapper.Map<AuthorDto>(authorFromRepo);
+            var author = AutoMapper.Mapper.Map<AuthorDto>(authorFromRepo);
 
             return Ok(author);
         }
