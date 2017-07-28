@@ -94,7 +94,7 @@ namespace Library.API.Controllers
             if (bookForAuthorFromRepo == null)
             {
                 return NotFound();
-            }
+            } 
 
             _libraryRepository.DeleteBook(bookForAuthorFromRepo);
 
