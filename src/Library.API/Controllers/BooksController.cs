@@ -129,6 +129,17 @@ namespace Library.API.Controllers
                 return BadRequest();
             }
 
+            if (book.Description == book.Title)
+            {
+                ModelState.AddModelError(nameof(BookForUpdateDto),
+                    "The provided description should be different than the title.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return new UnprocessableEntityObjectResult(ModelState);
+            }
+
             if (!_libraryRepository.AuthorExists(authorId))
             {
                 return NotFound();
@@ -183,10 +194,23 @@ namespace Library.API.Controllers
 
             var bookForAuthorFromRepo = _libraryRepository.GetBookForAuthor(authorId, id);
 
-            if (bookForAuthorFromRepo == null)
+            if (bookForAuthorFromRepo == null) // If true, upsert book
             {
                 var bookDto = new BookForUpdateDto();
-                patchDoc.ApplyTo(bookDto);
+                patchDoc.ApplyTo(bookDto, ModelState);
+
+                if (bookDto.Description == bookDto.Title)
+                {
+                    ModelState.AddModelError(nameof(BookForUpdateDto),
+                        "The provided description should be different from the title.");
+                }
+
+                TryValidateModel(bookDto);
+
+                if (!ModelState.IsValid)
+                {
+                    return new UnprocessableEntityObjectResult(ModelState);
+                }
 
                 var bookToAdd = AutoMapper.Mapper.Map<Book>(bookDto);
                 bookToAdd.Id = id;
@@ -207,7 +231,20 @@ namespace Library.API.Controllers
 
             var bookToPatch = AutoMapper.Mapper.Map<BookForUpdateDto>(bookForAuthorFromRepo);
 
-            patchDoc.ApplyTo(bookToPatch);
+            patchDoc.ApplyTo(bookToPatch, ModelState);
+
+            if (bookToPatch.Description == bookToPatch.Title)
+            {
+                ModelState.AddModelError(nameof(BookForUpdateDto),
+                    "The provided description should be different from the title.");
+            }
+
+            TryValidateModel(bookToPatch);
+
+            if (!ModelState.IsValid)
+            {
+                return new UnprocessableEntityObjectResult(ModelState);
+            }
 
             // add validation
 
