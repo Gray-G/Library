@@ -1,9 +1,9 @@
 C:\Users\Gray\Documents\GitHub\Library\src\Library.API\bin\Debug\netcoreapp1.1\Library.API.deps.json
 C:\Users\Gray\Documents\GitHub\Library\src\Library.API\bin\Debug\netcoreapp1.1\Library.API.runtimeconfig.json
 C:\Users\Gray\Documents\GitHub\Library\src\Library.API\bin\Debug\netcoreapp1.1\Library.API.runtimeconfig.dev.json
-C:\Users\Gray\Documents\GitHub\Library\src\Library.API\bin\Debug\netcoreapp1.1\Library.API.dll
-C:\Users\Gray\Documents\GitHub\Library\src\Library.API\bin\Debug\netcoreapp1.1\Library.API.pdb
 C:\Users\Gray\Documents\GitHub\Library\src\Library.API\obj\Debug\netcoreapp1.1\Library.API.csprojResolveAssemblyReference.cache
 C:\Users\Gray\Documents\GitHub\Library\src\Library.API\obj\Debug\netcoreapp1.1\Library.API.AssemblyInfo.cs
+C:\Users\Gray\Documents\GitHub\Library\src\Library.API\bin\Debug\netcoreapp1.1\Library.API.dll
+C:\Users\Gray\Documents\GitHub\Library\src\Library.API\bin\Debug\netcoreapp1.1\Library.API.pdb
 C:\Users\Gray\Documents\GitHub\Library\src\Library.API\obj\Debug\netcoreapp1.1\Library.API.dll
 C:\Users\Gray\Documents\GitHub\Library\src\Library.API\obj\Debug\netcoreapp1.1\Library.API.pdb
