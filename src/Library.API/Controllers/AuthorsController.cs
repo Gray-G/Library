@@ -9,6 +9,7 @@ using Library.API.Helpers;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Library.API.Entities;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace Library.API.Controllers
 {
@@ -16,21 +17,82 @@ namespace Library.API.Controllers
     public class AuthorsController : Controller
     {
         private ILibraryRepository _libraryRepository;
+        private IUrlHelper _urlHelper;
 
         const int maxAuthorPageSize = 20;
 
-        public AuthorsController(ILibraryRepository libraryRepository)
+        public object NewtonSoft { get; private set; }
+
+        public AuthorsController(ILibraryRepository libraryRepository,
+            IUrlHelper urlHelper)
         {
             _libraryRepository = libraryRepository;
+            _urlHelper = urlHelper;
         }
 
+        [HttpGet(Name = "GetAuthors")]
         public IActionResult GetAuthors(AuthorsResourceParameters authorsResourceParameters)
         {
             var authorsFromRepo = _libraryRepository.GetAuthors(authorsResourceParameters);
 
+            var previousPageLink = authorsFromRepo.HasPrevious ?
+                CreateAuthorsResourceUri(authorsResourceParameters,
+                ResourceUriType.PreviousPage) : null;
+
+            var nextPageLink = authorsFromRepo.HasNext ?
+                CreateAuthorsResourceUri(authorsResourceParameters,
+                ResourceUriType.NextPage) : null;
+
+            var paginationMetadata = new
+            {
+                totalCount = authorsFromRepo.TotalCount,
+                pageSize = authorsFromRepo.PageSize,
+                currentPage = authorsFromRepo.CurrentPage,
+                totalPages = authorsFromRepo.TotalPages,
+                previousPageLink = previousPageLink,
+                nextPageLink = nextPageLink
+            };
+
+            Response.Headers.Add("X-Pagination",
+                Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
+
             var authors = AutoMapper.Mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo);
 
             return Ok(authors);
+        }
+
+        private string CreateAuthorsResourceUri(
+            AuthorsResourceParameters authorsResourceParameters,
+            ResourceUriType type)
+        {
+            switch (type)
+            {
+                case ResourceUriType.PreviousPage:
+                    return _urlHelper.Link("GetAuthors",
+                        new
+                        {
+                            genre = authorsResourceParameters.Genre,
+                            pageNumber = authorsResourceParameters.PageNumber - 1,
+                            pageSize = authorsResourceParameters.PageSize
+                        });
+                case ResourceUriType.NextPage:
+                    return _urlHelper.Link("GetAuthors",
+                        new
+                        {
+                            genre = authorsResourceParameters.Genre,
+                            pageNumber = authorsResourceParameters.PageNumber + 1,
+                            pageSize = authorsResourceParameters.PageSize
+                        });
+
+                default:
+                    return _urlHelper.Link("GetAuthors",
+                        new
+                        {
+                            genre = authorsResourceParameters.Genre,
+                            pageNumber = authorsResourceParameters.PageNumber,
+                            pageSize = authorsResourceParameters.PageSize
+                        });
+            }
         }
 
         [HttpGet("{id}", Name = "GetAuthor")]
