@@ -16,14 +16,17 @@ namespace Library.API.Controllers
     public class AuthorsController : Controller
     {
         private ILibraryRepository _libraryRepository;
+
+        const int maxAuthorPageSize = 20;
+
         public AuthorsController(ILibraryRepository libraryRepository)
         {
             _libraryRepository = libraryRepository;
         }
 
-        public IActionResult GetAuthors()
+        public IActionResult GetAuthors(AuthorsResourceParameters authorsResourceParameters)
         {
-            var authorsFromRepo = _libraryRepository.GetAuthors();
+            var authorsFromRepo = _libraryRepository.GetAuthors(authorsResourceParameters);
 
             var authors = AutoMapper.Mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo);
 
