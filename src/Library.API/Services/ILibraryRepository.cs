@@ -1,4 +1,5 @@
 ﻿using Library.API.Entities;
+using Library.API.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -6,8 +7,8 @@ namespace Library.API.Services
 {
     public interface ILibraryRepository
     {
-        IEnumerable<Author> GetAuthors();
         Author GetAuthor(Guid authorId);
+        IEnumerable<Author> GetAuthors(AuthorsResourceParameters authorsResourceParameters);
         IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds);
         void AddAuthor(Author author);
         void DeleteAuthor(Author author);
